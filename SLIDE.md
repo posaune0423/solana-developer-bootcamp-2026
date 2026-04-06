@@ -158,6 +158,8 @@ gas priority feeなど以前にvalidator nodeのstake amountでもtx取り込み
 
 ---
 
+### 2. txの組み立て & RPCへ送信
+
 `@anchor-lang/core`は現状solana/kit未support. 最新の`@solana/kit`でanchor programを型安全に使うには、
 
 ```bash
@@ -227,7 +229,7 @@ function SendPrepared({ instructions }) {
 
 #### 1. 推奨libとlegacy lib
 
-#### 2. 非同期状態管理
+#### 2. RPCの冗長設計
 
 #### 3. error handling
 
@@ -254,13 +256,36 @@ reactなどで使う場合は基本的に`@solana/client`, `@solana/react-hooks`
 
 ---
 
-### 2. 非同期状態管理
+### 2. RPCの冗長設計
 
-Web3のfrontendは扱う状態が多い
+RPCサービスも完璧ではありません。AWSやCloudflareなどと同じ様にサービスがダウンすることもあるのであらかじめ冗長構成を取っておくのが本番環境では重要です。
 
-- walletの`connect` / `disconnect`
-- tx送信のstatus(`isSending`)
-- アカウントデータのfetch・subscribe
+<div class="text-lg">
+
+```ts
+import { RpcTransport } from '@solana/rpc-spec'
+import { RpcResponse } from '@solana/rpc-spec-types'
+import { createHttpTransport } from '@solana/rpc-transport-http'
+
+// Create a transport for each RPC server
+const transports = [
+  createHttpTransport({ url: 'https://mainnet-beta.my-server-1.com' }),
+  createHttpTransport({ url: 'https://mainnet-beta.my-server-2.com' }),
+  createHttpTransport({ url: 'https://mainnet-beta.my-server-3.com' }),
+]
+
+// Create a wrapper transport that distributes requests to them
+let nextTransport = 0
+async function roundRobinTransport<TResponse>(
+  ...args: Parameters<RpcTransport>
+): Promise<RpcResponse<TResponse>> {
+  const transport = transports[nextTransport]
+  nextTransport = (nextTransport + 1) % transports.length
+  return await transport(...args)
+}
+```
+
+</div>
 
 ---
 
@@ -335,6 +360,10 @@ try {
 <!-- header: '' -->
 
 ## よくある追加実装
+
+---
+
+### よくある追加実装
 
 #### 1.payerを使ったgasless tx
 
@@ -484,7 +513,7 @@ await rpc
 
 #### 1. 推奨libとlegacy lib
 
-#### 2. 非同期状態管理
+### 2. RPCの冗長設計
 
 #### 3. error handling
 
