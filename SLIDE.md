@@ -355,6 +355,274 @@ try {
 
 ### 4. セキュリティ
 
+#### フロントエンド側のセキュリティ
+
+<div class="grid grid-cols-3 gap-5 items-stretch w-full mt-6 text-lg leading-relaxed">
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(12, 16, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(20,241,149,0.96), rgba(70,214,255,0.55));"></div>
+
+<div class="px-5 py-5">
+
+<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
+
+<span>Frontend Risk</span>
+<span style="font-size: 1.05em; color: rgba(20,241,149,0.96);">01</span>
+
+</div>
+
+<div class="text-2xl font-semibold mb-3">Wallet Phishing</div>
+
+<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+
+「Mint」のつもりでも、別の命令に署名させられることがある
+
+</div>
+
+- confirm 画面だけで安全と判断しない
+- UI で `Program ID` と instruction を明示する
+- `Verified Builds` で本物の program か確認する
+
+</div>
+
+</div>
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(14, 19, 31, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(70,214,255,0.92), rgba(153,69,255,0.5));"></div>
+
+<div class="px-5 py-5">
+
+<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
+
+<span>Preflight Check</span>
+<span style="font-size: 1.05em; color: rgba(70,214,255,0.92);">02</span>
+
+</div>
+
+<div class="text-2xl font-semibold mb-3">Transaction Simulation</div>
+
+<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+
+送信前に失敗や想定外の state change を見つけるための最終チェック
+
+</div>
+
+- `simulateTransaction` で事前確認する
+- blockhash 切れや account 不足を先に潰せる
+- 安全証明ではなく preflight に留まる
+
+</div>
+
+</div>
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(16, 22, 36, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(153,69,255,0.92), rgba(196,163,255,0.56));"></div>
+
+<div class="px-5 py-5">
+
+<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
+
+<span>Program Trust</span>
+<span style="font-size: 1.05em; color: rgba(196,163,255,0.96);">03</span>
+
+</div>
+
+<div class="text-2xl font-semibold mb-3">Malicious Program</div>
+
+<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+
+想定外の `Program ID` を踏むと、正しい UI でも不正な binary を実行し得る
+
+</div>
+
+- 参照先 `Program ID` を固定して確認する
+- unofficial fork や差し替え済み program を疑う
+- `Verified Builds` で binary と公開ソースの対応を検証する
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mt-5 px-5 py-4 rounded-2xl text-base leading-relaxed" style="background: rgba(10, 14, 24, 0.74); border: 1px solid rgba(255,255,255,0.1); color: rgba(170,180,214,0.92);">
+
+フロントエンド側では「何を送るか」と「どこに送るか」をユーザーにも見える形で固定することが重要
+
+</div>
+
+---
+
+### 4. セキュリティ
+
+#### プログラム側のセキュリティ
+
+<div class="grid grid-cols-3 gap-5 items-stretch w-full mt-6 text-lg leading-relaxed">
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(12, 16, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(20,241,149,0.96), rgba(70,214,255,0.55));"></div>
+
+<div class="px-5 py-5">
+
+<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
+
+<span>Authority</span>
+<span style="font-size: 1.05em; color: rgba(20,241,149,0.96);">01</span>
+
+</div>
+
+<div class="text-2xl font-semibold mb-3">Signer Check</div>
+
+<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+
+重要操作の呼び出し元が本当に権限者かを見る
+
+</div>
+
+- CPI でも signer 権限は勝手に増やせない
+- `ctx.accounts.authority.is_signer`
+
+</div>
+
+</div>
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(14, 19, 31, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(70,214,255,0.92), rgba(153,69,255,0.5));"></div>
+
+<div class="px-5 py-5">
+
+<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
+
+<span>Ownership</span>
+<span style="font-size: 1.05em; color: rgba(70,214,255,0.92);">02</span>
+
+</div>
+
+<div class="text-2xl font-semibold mb-3">Account Ownership</div>
+
+<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+
+渡された account が自分の program 管理下かを見る
+
+</div>
+
+- `owner` が違えば data は安全に更新できない
+- `account.owner == program_id`
+
+</div>
+
+</div>
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(16, 22, 36, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(153,69,255,0.92), rgba(196,163,255,0.56));"></div>
+
+<div class="px-5 py-5">
+
+<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
+
+<span>Derivation</span>
+<span style="font-size: 1.05em; color: rgba(196,163,255,0.96);">03</span>
+
+</div>
+
+<div class="text-2xl font-semibold mb-3">PDA Validation</div>
+
+<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+
+正しい seeds から導出した address かを見る
+
+</div>
+
+- `signer` `owner` `PDA再導出` をセットで確認する
+- `require_keys_eq!(authority, expected_authority)`
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mt-5 px-5 py-4 rounded-2xl text-base leading-relaxed" style="background: rgba(10, 14, 24, 0.74); border: 1px solid rgba(255,255,255,0.1); color: rgba(170,180,214,0.92);">
+
+単独の check では不十分で、権限者・所有者・導出元の 3 方向から同時に締める必要がある
+
+</div>
+
+---
+
+### 4. セキュリティ
+
+#### 3点セットで守る
+
+「何を守っているのか」を意識した 3 点セット
+
+<div class="grid grid-cols-3 gap-5 items-stretch w-full mt-6 text-center text-lg leading-relaxed">
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(12, 16, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(20,241,149,0.96), rgba(70,214,255,0.55));"></div>
+
+<div class="px-5 py-6">
+
+<div class="text-5xl font-bold mb-3" style="color: rgba(20,241,149,0.96);">1</div>
+
+<div class="text-2xl font-semibold mb-3">署名確認</div>
+
+<div style="color: rgba(170,180,214,0.92);">本当に権限のある人物か？</div>
+
+</div>
+
+</div>
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(14, 19, 31, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(70,214,255,0.92), rgba(153,69,255,0.5));"></div>
+
+<div class="px-5 py-6">
+
+<div class="text-5xl font-bold mb-3" style="color: rgba(70,214,255,0.92);">2</div>
+
+<div class="text-2xl font-semibold mb-3">Owner確認</div>
+
+<div style="color: rgba(170,180,214,0.92);">この account は自分の program か？</div>
+
+</div>
+
+</div>
+
+<div class="rounded-2xl overflow-hidden" style="background: rgba(16, 22, 36, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+
+<div style="height: 4px; background: linear-gradient(90deg, rgba(153,69,255,0.92), rgba(196,163,255,0.56));"></div>
+
+<div class="px-5 py-6">
+
+<div class="text-5xl font-bold mb-3" style="color: rgba(196,163,255,0.96);">3</div>
+
+<div class="text-2xl font-semibold mb-3">PDA再導出確認</div>
+
+<div style="color: rgba(170,180,214,0.92);">seeds から導出した address と一致するか？</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mt-6 rounded-2xl px-6 py-4 text-lg leading-relaxed" style="background: rgba(10, 14, 24, 0.82); border: 1px solid rgba(255,255,255,0.12);">
+
+**この 3 つを怠ると**
+
+- 攻撃者が意図しない account を差し込める
+- 権限のない操作を実行できる余地が生まれる
+
+</div>
+
 ---
 
 <!-- header: '' -->
@@ -513,7 +781,7 @@ await rpc
 
 #### 1. 推奨libとlegacy lib
 
-### 2. RPCの冗長設計
+#### 2. RPCの冗長設計
 
 #### 3. error handling
 
