@@ -9,6 +9,7 @@
     'Noto Sans JP', sans-serif;
 
   --solana-purple: #9945ff;
+  --solana-purple-soft: #c4a3ff;
   --solana-green: #14f195;
   --solana-cyan: #46d6ff;
   --solana-bg: #05070d;
@@ -125,7 +126,10 @@ section > header + h3 {
   top: 84px;
 }
 
-a,
+a {
+  color: var(--solana-purple-soft);
+}
+
 strong,
 mark {
   color: var(--solana-link);
@@ -165,27 +169,39 @@ table tr:nth-child(even) td {
 
 code {
   font-family: 'ABC Diatype Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace;
-  color: #dffef1;
+}
+
+:not(pre) > code {
+  padding: 0.14em 0.38em;
+  border-radius: 6px;
+  color: #e6edf3;
+  background: rgba(110, 118, 129, 0.24);
 }
 
 pre {
-  color: #f2f5ff !important;
-  background: rgba(9, 14, 25, 0.84) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #c9d1d9 !important;
+  background: #0d1117 !important;
+  border: 1px solid #30363d;
   border-radius: 14px;
+}
+
+pre code {
+  color: #c9d1d9 !important;
+  background: transparent;
 }
 
 pre .hljs-comment,
 pre .hljs-quote {
-  color: #6f7b97 !important;
+  color: #8b949e !important;
   font-style: italic;
 }
 
 pre .hljs-keyword,
 pre .hljs-selector-tag,
 pre .hljs-doctag,
+pre .hljs-meta,
 pre .hljs-title.function_ {
-  color: #bb86ff !important;
+  color: #ff7b72 !important;
 }
 
 pre .hljs-string,
@@ -193,20 +209,36 @@ pre .hljs-regexp,
 pre .hljs-addition,
 pre .hljs-attribute,
 pre .hljs-meta .hljs-string {
-  color: #7cf7cd !important;
+  color: #a5d6ff !important;
 }
 
 pre .hljs-number,
 pre .hljs-literal,
 pre .hljs-symbol,
 pre .hljs-bullet {
-  color: #46d6ff !important;
+  color: #79c0ff !important;
 }
 
 pre .hljs-title,
 pre .hljs-section,
+pre .hljs-title.class_,
 pre .hljs-built_in,
 pre .hljs-type,
 pre .hljs-class .hljs-title {
-  color: #f9c96b !important;
+  color: #7ee787 !important;
+}
+
+pre .hljs-variable,
+pre .hljs-template-variable,
+pre .hljs-link,
+pre .hljs-selector-id,
+pre .hljs-selector-class {
+  color: #ffa657 !important;
+}
+
+pre .hljs-function .hljs-title,
+pre .hljs-property,
+pre .hljs-attr,
+pre .hljs-title.class_.inherited__ {
+  color: #d2a8ff !important;
 }
