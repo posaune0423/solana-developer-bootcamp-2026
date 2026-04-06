@@ -19,7 +19,7 @@ footer: 'Solana Developer Bootcamp 2026'
 
 <div class="flex justify-center items-center min-w-0 pr-2">
 
-<img src="./assets/profile-picture.png" alt="asuma" class="block w-64 h-64 max-w-full flex-shrink-0 object-cover rounded-full border-0 shadow-none outline-none" />
+<img src="assets/profile-picture.png" alt="asuma" class="block w-64 h-64 max-w-full flex-shrink-0 object-cover rounded-full border-0 shadow-none outline-none" />
 
 </div>
 
@@ -27,9 +27,11 @@ footer: 'Solana Developer Bootcamp 2026'
 
 - Name: **asuma**
 - Role: **Co-Founder / CTO [@DaikoAI](https://daiko.ai)**
-- X: [@0xasuma_jp](https://x.com/0xasuma_jp)
-- Github: [@posaune0423](https://github.com/posaune0423)
-- Linkedin: [@posaune0423](https://linkedin.com/in/posaune0423)
+- Links:
+  - [posaune0423.com](https://posaune0423.com)
+  - X: [@0xasuma_jp](https://x.com/0xasuma_jp)
+  - Github: [@posaune0423](https://github.com/posaune0423)
+  - Linkedin: [@posaune0423](https://linkedin.com/in/posaune0423)
 
 </div>
 
@@ -65,7 +67,7 @@ footer: 'Solana Developer Bootcamp 2026'
 
 ### 全体像
 
-![h:580](./assets/solana-tx-flow.jpg)
+![h:580](assets/solana-tx-flow.jpg)
 
 ---
 
@@ -122,7 +124,7 @@ await program.methods
 
 ### 3. RPC送信以降の流れ
 
-![](./assets/resources/sol_transfer_process_diagram.png)
+![](assets/resources/sol_transfer_process_diagram.png)
 
 ---
 
@@ -366,7 +368,7 @@ await rpc
 
 [Substream]()というサービスを使うとgraphQLやSQlでデータを簡単にfilter / queryできるようになる
 
-![h:400](./assets/resources/indexer_architecture.png)
+![h:400](assets/resources/indexer_architecture.png)
 
 ---
 
@@ -378,7 +380,7 @@ await rpc
 
 <!-- header: まとめ -->
 
-![h:580](./assets/solana-tx-flow.jpg)
+![h:580](assets/solana-tx-flow.jpg)
 
 ---
 
