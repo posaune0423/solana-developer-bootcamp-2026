@@ -1,0 +1,212 @@
+/* @theme solana */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+@import 'default';
+
+:root {
+  font-family:
+    'ABC Diatype', 'Plus Jakarta Sans', 'Manrope', 'Zen Kaku Gothic New',
+    'Noto Sans JP', sans-serif;
+
+  --solana-purple: #9945ff;
+  --solana-green: #14f195;
+  --solana-cyan: #46d6ff;
+  --solana-bg: #05070d;
+  --solana-bg-soft: #0b1020;
+  --solana-surface: rgba(12, 16, 28, 0.9);
+  --solana-surface-alt: rgba(18, 23, 37, 0.96);
+  --solana-text: #f5f7ff;
+  --solana-text-muted: #aab4d6;
+  --solana-link: #7cf7cd;
+  --solana-border: rgba(255, 255, 255, 0.12);
+}
+
+section {
+  --h1-color: var(--solana-text);
+  position: relative;
+  color: var(--solana-text);
+  padding-top: 124px;
+  background:
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(153, 69, 255, 0.22) 0,
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 88% 14%,
+      rgba(20, 241, 149, 0.14) 0,
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 72% 84%,
+      rgba(70, 214, 255, 0.08) 0,
+      transparent 22%
+    ),
+    linear-gradient(135deg, #04050b 0%, #090d16 42%, #060913 100%);
+  background-color: var(--solana-bg);
+}
+
+section::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  right: 32px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(153, 69, 255, 0.92),
+    rgba(70, 214, 255, 0.8) 52%,
+    rgba(20, 241, 149, 0.92)
+  );
+}
+
+header,
+footer,
+section::after {
+  color: var(--solana-text-muted);
+}
+
+header {
+  position: absolute;
+  top: 52px;
+  left: 78px;
+  right: auto;
+  max-width: calc(100% - 156px);
+  margin: 0;
+  font-size: 0.44em;
+  letter-spacing: 0.04em;
+}
+
+header:empty {
+  display: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    'ABC Diatype', 'Plus Jakarta Sans', 'Manrope', 'Zen Kaku Gothic New',
+    'Noto Sans JP', sans-serif;
+  border-bottom: none;
+  color: var(--solana-text);
+}
+
+h2,
+h3 {
+  color: var(--solana-green);
+}
+
+section > h1:first-child,
+section > h2:first-child,
+section > header + h1,
+section > header + h2 {
+  position: static;
+  inset: auto;
+}
+
+section > h3:first-child,
+section > header + h3 {
+  position: absolute;
+  left: 78px;
+  right: 78px;
+  margin: 0;
+}
+
+section > h3:first-child {
+  top: 52px;
+}
+
+section > header + h3 {
+  top: 84px;
+}
+
+a,
+strong,
+mark {
+  color: var(--solana-link);
+}
+
+table {
+  display: inline-table;
+  width: auto;
+  max-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--solana-border);
+  border-radius: 14px;
+  background: var(--solana-surface);
+}
+
+table th,
+table td {
+  color: var(--solana-text);
+  background: transparent;
+  border-color: var(--solana-border);
+}
+
+table th {
+  background: var(--solana-surface-alt);
+  color: #dbe4ff;
+}
+
+table td {
+  background: rgba(10, 14, 24, 0.82);
+}
+
+table tr:nth-child(even) td {
+  background: rgba(14, 19, 31, 0.9);
+}
+
+code {
+  font-family: 'ABC Diatype Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  color: #dffef1;
+}
+
+pre {
+  color: #f2f5ff !important;
+  background: rgba(9, 14, 25, 0.84) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+
+pre .hljs-comment,
+pre .hljs-quote {
+  color: #6f7b97 !important;
+  font-style: italic;
+}
+
+pre .hljs-keyword,
+pre .hljs-selector-tag,
+pre .hljs-doctag,
+pre .hljs-title.function_ {
+  color: #bb86ff !important;
+}
+
+pre .hljs-string,
+pre .hljs-regexp,
+pre .hljs-addition,
+pre .hljs-attribute,
+pre .hljs-meta .hljs-string {
+  color: #7cf7cd !important;
+}
+
+pre .hljs-number,
+pre .hljs-literal,
+pre .hljs-symbol,
+pre .hljs-bullet {
+  color: #46d6ff !important;
+}
+
+pre .hljs-title,
+pre .hljs-section,
+pre .hljs-built_in,
+pre .hljs-type,
+pre .hljs-class .hljs-title {
+  color: #f9c96b !important;
+}

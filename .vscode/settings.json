@@ -1,0 +1,6 @@
+// Please put `.vscode/settings.json` on your workspace
+{
+  "markdown.marp.themes": [
+    "./theme/solana.css"
+  ]
+}
