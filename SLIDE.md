@@ -26,10 +26,10 @@ footer: 'Solana Developer Bootcamp 2026'
 <div class="min-w-0 pl-4 pr-2 text-left text-2xl leading-relaxed tracking-tight">
 
 - Name: **asuma**
-- Role: **Co-Founder / CTO @DaikoAI**
-- X: [@0xasuma_jp]()
-- Github: [@posaune0423]()
-- Linkedin: [@posaune0423]()
+- Role: **Co-Founder / CTO [@DaikoAI](https://daiko.ai)**
+- X: [@0xasuma_jp](https://x.com/0xasuma_jp)
+- Github: [@posaune0423](https://github.com/posaune0423)
+- Linkedin: [@posaune0423](https://linkedin.com/in/posaune0423)
 
 </div>
 
@@ -153,10 +153,10 @@ await program.methods
 
 ### 1. 推奨libとlegacy lib
 
-**Latest**
+**Latest ✅**
 `@solana/client`, `@solana/react-hooks`
 
-**Legacy**
+**Legacy ❌**
 `@solana/web3.js`
 
 ※とはいえ、結構いろんなsdkやlibがまだlegacyなweb3.jsに依存している状況

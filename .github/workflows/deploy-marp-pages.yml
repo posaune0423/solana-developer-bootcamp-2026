@@ -30,8 +30,11 @@ jobs:
           generate-html: true
           generate-pdf: true
 
+      # marp-cli-action uses Docker; output/ is often root-owned on the host.
       - name: Set default page for site root
-        run: cp output/SLIDE.html output/index.html
+        run: |
+          sudo chown -R "$(whoami):$(whoami)" output
+          cp output/SLIDE.html output/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
