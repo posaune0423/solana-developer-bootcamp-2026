@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -12,28 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  verify:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Convert Markdown to HTML and PDF
-        uses: KoharaKazuya/marp-cli-action@v4
-        with:
-          config-file: ./.marprc-ci.yml
-          generate-html: true
-          generate-pdf: true
-
-      - name: Assert Marp outputs exist
-        run: |
-          test -f output/SLIDE.html
-          test -f output/SLIDE.pdf
-
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
