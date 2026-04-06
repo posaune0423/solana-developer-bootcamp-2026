@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: write
     steps:
       - uses: actions/checkout@v4
 
@@ -34,3 +35,11 @@ jobs:
           test -f output/SLIDE.html
           test -f output/SLIDE.pdf
           test -f output/assets/bg.png
+
+      - name: Upload PDF (workflow artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SLIDE-pr-${{ github.event.pull_request.number }}-${{ github.sha }}
+          path: output/SLIDE.pdf
+          if-no-files-found: error
+          retention-days: 30

@@ -20,6 +20,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
+      actions: write
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +39,14 @@ jobs:
           mkdir -p output/assets
           cp -R assets/. output/assets/
           cp output/SLIDE.html output/index.html
+
+      - name: Upload PDF (workflow artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SLIDE-${{ github.sha }}
+          path: output/SLIDE.pdf
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
