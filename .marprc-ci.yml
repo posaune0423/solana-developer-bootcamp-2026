@@ -1,0 +1,8 @@
+# Marp CLI config for CI (marp-cli-action on GitHub Actions).
+# See: https://github.com/marp-team/marp-cli/blob/master/README.md#configuration-file
+inputDir: .
+output: output
+allowLocalFiles: true
+lang: ja-JP
+themeSet:
+  - theme

@@ -5,3 +5,6 @@
 
 __pycache__/
 *.py[cod]
+
+# Marp CLI local / CI build output
+output/
