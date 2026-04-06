@@ -29,7 +29,7 @@ footer: 'Solana Developer Bootcamp 2026'
 - Role: **Co-Founder / CTO [@DaikoAI](https://daiko.ai)**
 - Links:
   - [posaune0423.com](https://posaune0423.com)
-  - X: [@0xasuma_jp](https://x.com/0xasuma_jp)
+  - 𝕏: [@0xasuma_jp](https://x.com/0xasuma_jp)
   - Github: [@posaune0423](https://github.com/posaune0423)
   - Linkedin: [@posaune0423](https://linkedin.com/in/posaune0423)
 
@@ -115,7 +115,7 @@ function ConnectButton() {
 
 BlockchainのNodeを運用しuserからの署名付きtxを受け取りblockchainに送信するapiなどを提供しているインフラ事業者
 
-<!-- 
+<!--
 SWQoSなどを採用しているSolanaでは特にRPCの選定などは重要
 gas priority feeなど以前にvalidator nodeのstake amountでもtx取り込みのpriorityが変わってくる
  -->
@@ -233,7 +233,6 @@ function SendPrepared({ instructions }) {
 
 #### 4. セキュリティ
 
-
 ---
 
 <!-- header: フロントエンド実装での注意点 -->
@@ -330,8 +329,6 @@ try {
 ---
 
 ### 4. セキュリティ
-
-
 
 ---
 
@@ -504,6 +501,14 @@ await rpc
 ---
 
 <!-- header: '' -->
+
+<div class="text-center">
+
+# Thank you for listening
+
+</div>
+
+---
 
 ### 参考文献・サービス
 
