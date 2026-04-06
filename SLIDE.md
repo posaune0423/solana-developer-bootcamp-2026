@@ -173,6 +173,10 @@ Web3のfrontendは扱う状態が多い
 
 ---
 
+
+
+---
+
 ### 3. error handling
 
 rpc独自のエラーとdomain logicに関するエラーは分けて管理するべき。
