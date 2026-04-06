@@ -31,9 +31,12 @@ jobs:
           generate-pdf: true
 
       # marp-cli-action uses Docker; output/ is often root-owned on the host.
-      - name: Set default page for site root
+      # HTML references assets/... relative to the site root; Marp does not copy repo assets into output/.
+      - name: Prepare Pages artifact (permissions, assets, index)
         run: |
           sudo chown -R "$(whoami):$(whoami)" output
+          mkdir -p output/assets
+          cp -R assets/. output/assets/
           cp output/SLIDE.html output/index.html
 
       - name: Upload Pages artifact

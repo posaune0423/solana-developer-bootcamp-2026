@@ -67,7 +67,11 @@ footer: 'Solana Developer Bootcamp 2026'
 
 ### 全体像
 
-![h:580](assets/solana-tx-flow.jpg)
+<div class="text-center">
+
+![h:520](assets/solana-tx-flow.jpg)
+
+</div>
 
 ---
 
@@ -91,40 +95,118 @@ function ConnectButton() {
 
 ---
 
-### 2. txの組み立て & RPCへ送信
+**Solanaのtxの中身**
 
-```tsx
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
-import { Program } from '@anchor-lang/core'
-import type { HelloAnchor } from './idlType'
-import idl from './idl.json'
+<div class="text-center">
 
-const connection = new Connection(clusterApiUrl('devnet'), 'confirmed')
+![h:470](assets/resources/solana_tx.jpg)
 
-export const program = new Program(idl as HelloAnchor, {
-  connection,
-})
-```
+</div>
 
 ---
 
 ### 2. txの組み立て & RPCへ送信
 
-invokeしたいprogramのinstructionを指定し `.rpc()`で組み立てたtxをそのままsubmitできる
+<div class="grid grid-cols-2 gap-x-10 items-center w-full max-w-full mx-auto mt-4 px-4 box-border">
+
+<div class="min-w-0 pr-3 text-left text-lg leading-relaxed">
+
+**RPC(Provider)の役割:**
+
+BlockchainのNodeを運用しuserからの署名付きtxを受け取りblockchainに送信するapiなどを提供しているインフラ事業者
+
+<!-- 
+SWQoSなどを採用しているSolanaでは特にRPCの選定などは重要
+gas priority feeなど以前にvalidator nodeのstake amountでもtx取り込みのpriorityが変わってくる
+ -->
+
+</div>
+
+<div class="min-w-0 pl-2 flex items-center justify-center">
+
+<div class="grid grid-cols-2 gap-y-10 items-stretch justify-items-center w-full max-w-sm mx-auto">
+
+<div class="bg-white rounded-lg shadow-md border border-gray-200 p-3 flex items-center justify-center h-24 w-36 mx-auto box-border">
+
+<img src="assets/resources/rpc/helius.png" alt="Helius" class="block max-h-12 w-auto max-w-full object-contain" />
+
+</div>
+
+<div class="bg-white rounded-lg shadow-md border border-gray-200 p-3 flex items-center justify-center h-24 w-36 mx-auto box-border">
+
+<img src="assets/resources/rpc/quicknode.png" alt="QuickNode" class="block max-h-12 w-auto max-w-full object-contain" />
+
+</div>
+
+<div class="bg-white rounded-lg shadow-md border border-gray-200 p-3 flex items-center justify-center h-24 w-36 mx-auto box-border">
+
+<img src="assets/resources/rpc/alchemy.png" alt="Alchemy" class="block max-h-12 w-auto max-w-full object-contain" />
+
+</div>
+
+<div class="bg-white rounded-lg shadow-md border border-gray-200 p-3 flex items-center justify-center h-24 w-36 mx-auto box-border">
+
+<img src="assets/resources/rpc/triton.png" alt="Triton" class="block max-h-12 w-auto max-w-full object-contain" />
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+`@anchor-lang/core`は現状solana/kit未support. 最新の`@solana/kit`でanchor programを型安全に使うには、
+
+```bash
+codama run js
+```
+
+などでanchor programのidlからinstruction生成codeなどを自動生成する事で`@solana/kit`でも型安全にanchor programを呼び出すことができます
+
+---
+
+### 2. txの組み立て & RPCへ送信
+
+[codama]()でgenerateした関数でinstructionを生成し `prepareAndSend()`で組み立てたtxをsubmitできます
+
+<div class="text-xl">
 
 ```tsx
-await program.methods
-  .instructionName(instructionData)
-  .accounts({})
-  .signers([])
-  .rpc()
+import { useSendTransaction } from '@solana/react-hooks'
+
+function SendPrepared({ instructions }) {
+  const { prepareAndSend, isSending, status, signature, error } =
+    useSendTransaction()
+  return (
+    <div>
+      <button
+        disabled={isSending}
+        onClick={() => prepareAndSend({ instructions })}
+      >
+        {isSending ? 'Submitting…' : 'Send transaction'}
+      </button>
+      <p>Status: {status}</p>
+      {signature ? <p>Signature: {signature}</p> : null}
+      {error ? <p role="alert">{String(error)}</p> : null}
+    </div>
+  )
+}
 ```
+
+</div>
 
 ---
 
 ### 3. RPC送信以降の流れ
 
+<div class="text-center">
+
 ![](assets/resources/sol_transfer_process_diagram.png)
+
+</div>
 
 ---
 
@@ -149,14 +231,22 @@ await program.methods
 
 #### 3. error handling
 
+#### 4. セキュリティ
+
+
 ---
 
 <!-- header: フロントエンド実装での注意点 -->
 
 ### 1. 推奨libとlegacy lib
 
+<!--
+reactなどで使う場合は基本的に`@solana/client`, `@solana/react-hooks`を使う
+`@solana/kit`はそれらのlibの内部でも使われているより低レベルな実装
+-->
+
 **Latest ✅**
-`@solana/client`, `@solana/react-hooks`
+`@solana/client`, `@solana/react-hooks`, `@solana/kit`
 
 **Legacy ❌**
 `@solana/web3.js`
@@ -172,10 +262,6 @@ Web3のfrontendは扱う状態が多い
 - walletの`connect` / `disconnect`
 - tx送信のstatus(`isSending`)
 - アカウントデータのfetch・subscribe
-
----
-
-
 
 ---
 
@@ -243,9 +329,9 @@ try {
 
 ---
 
-### セキュリティ
+### 4. セキュリティ
 
-a. Drift Protocolのハックとか鍵管理周りの話
+
 
 ---
 
@@ -305,7 +391,6 @@ const msg = pipe(
 </div>
 
 ---
-
 
 <div class="text-lg">
 
@@ -380,7 +465,11 @@ await rpc
 
 <!-- header: まとめ -->
 
-![h:580](assets/solana-tx-flow.jpg)
+<div class="text-center">
+
+![h:520](assets/solana-tx-flow.jpg)
+
+</div>
 
 ---
 
@@ -401,6 +490,8 @@ await rpc
 #### 2. 非同期状態管理
 
 #### 3. error handling
+
+#### 4. セキュリティ
 
 ---
 
@@ -423,3 +514,4 @@ await rpc
 
 - https://solana.com/docs/core/transactions/transaction-structure
 - https://solana.com/docs/frontend
+- https://www.youtube.com/watch?v=2T3DOMv7iR4

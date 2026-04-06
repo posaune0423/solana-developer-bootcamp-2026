@@ -22,7 +22,15 @@ jobs:
           generate-html: true
           generate-pdf: true
 
+      # Same asset layout as deploy (Marp HTML expects ./assets/ next to the HTML files).
+      - name: Mirror assets into output
+        run: |
+          sudo chown -R "$(whoami):$(whoami)" output
+          mkdir -p output/assets
+          cp -R assets/. output/assets/
+
       - name: Assert Marp outputs exist
         run: |
           test -f output/SLIDE.html
           test -f output/SLIDE.pdf
+          test -f output/assets/bg.png
