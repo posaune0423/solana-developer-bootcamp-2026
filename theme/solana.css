@@ -174,8 +174,9 @@ code {
 :not(pre) > code {
   padding: 0.14em 0.38em;
   border-radius: 6px;
-  color: #e6edf3;
-  background: rgba(110, 118, 129, 0.24);
+  color: #9ef0ff;
+  background: rgba(70, 214, 255, 0.14);
+  border: 1px solid rgba(70, 214, 255, 0.22);
 }
 
 pre {

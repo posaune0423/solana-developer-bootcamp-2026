@@ -1,1 +1,1 @@
-# jupiter-agent-handson
+# solana-developer-bootcamp-2026
