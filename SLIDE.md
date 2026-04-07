@@ -635,7 +635,7 @@ try {
 
 #### 1.payerを使ったgasless tx
 
-#### 2. indexerを使用したデータの集計、読み取り
+#### 2. indexerを使用したデータのクエリ・集計
 
 ---
 
@@ -653,7 +653,7 @@ Solanaは複数署名者・複数権限者を前提にした transaction model.
 
 ---
 
-Alchemyなどのサービスを使うと以下の様に実装できます
+[Alchemy](https://www.alchemy.com)などのサービスを使うと以下の様に実装できます
 
 <div class="text-xl">
 
@@ -745,9 +745,13 @@ await rpc
 
 ---
 
-[Substream]()というサービスを使うとgraphQLやSQlでデータを簡単にfilter / queryできるようになる
+[Substream](https://substreams.dev)というサービスを使うとgraphQLやSQlでデータを簡単にfilter / queryできるindexerを実装できます。
 
-![h:400](assets/resources/indexer_architecture.png)
+<div class="text-center">
+
+![h:440](assets/resources/indexer_architecture.png)
+
+</div>
 
 ---
 
