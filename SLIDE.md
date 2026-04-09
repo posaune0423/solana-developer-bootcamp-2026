@@ -1,7 +1,7 @@
 ---
 marp: true
 theme: solana
-# paginate: true
+paginate: true
 style: @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/utilities.min.css');
 backgroundImage: url(./assets/bg.png)
 footer: 'Solana Developer Bootcamp 2026'
@@ -79,7 +79,7 @@ footer: 'Solana Developer Bootcamp 2026'
 
 ```tsx
 function ConnectButton() {
-  const { connectors, connect } = useWalletConnection()
+  const { connectors, connect } = useWalletConnection();
 
   return (
     <div>
@@ -89,7 +89,7 @@ function ConnectButton() {
         </button>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -177,24 +177,20 @@ codama run js
 <div class="text-xl">
 
 ```tsx
-import { useSendTransaction } from '@solana/react-hooks'
+import { useSendTransaction } from "@solana/react-hooks";
 
 function SendPrepared({ instructions }) {
-  const { prepareAndSend, isSending, status, signature, error } =
-    useSendTransaction()
+  const { prepareAndSend, isSending, status, signature, error } = useSendTransaction();
   return (
     <div>
-      <button
-        disabled={isSending}
-        onClick={() => prepareAndSend({ instructions })}
-      >
-        {isSending ? 'Submitting…' : 'Send transaction'}
+      <button disabled={isSending} onClick={() => prepareAndSend({ instructions })}>
+        {isSending ? "Submitting…" : "Send transaction"}
       </button>
       <p>Status: {status}</p>
       {signature ? <p>Signature: {signature}</p> : null}
       {error ? <p role="alert">{String(error)}</p> : null}
     </div>
-  )
+  );
 }
 ```
 
@@ -252,7 +248,7 @@ reactなどで使う場合は基本的に`@solana/client`, `@solana/react-hooks`
 **Legacy ❌**
 `@solana/web3.js`
 
-※とはいえ、結構いろんなsdkやlibがまだlegacyなweb3.jsに依存している状況
+※とはいえ、結構多くのsdkやlibがまだlegacyな`@solana/web3.js`に依存している状況
 
 ---
 
@@ -260,28 +256,26 @@ reactなどで使う場合は基本的に`@solana/client`, `@solana/react-hooks`
 
 RPCサービスも完璧ではありません。AWSやCloudflareなどと同じ様にサービスがダウンすることもあるのであらかじめ冗長構成を取っておくのが本番環境では重要です。
 
-<div class="text-lg">
+<div class="text-sm">
 
 ```ts
-import { RpcTransport } from '@solana/rpc-spec'
-import { RpcResponse } from '@solana/rpc-spec-types'
-import { createHttpTransport } from '@solana/rpc-transport-http'
+import { RpcTransport } from "@solana/rpc-spec";
+import { RpcResponse } from "@solana/rpc-spec-types";
+import { createHttpTransport } from "@solana/rpc-transport-http";
 
 // Create a transport for each RPC server
 const transports = [
-  createHttpTransport({ url: 'https://mainnet-beta.my-server-1.com' }),
-  createHttpTransport({ url: 'https://mainnet-beta.my-server-2.com' }),
-  createHttpTransport({ url: 'https://mainnet-beta.my-server-3.com' }),
-]
+  createHttpTransport({ url: "https://mainnet-beta.my-server-1.com" }),
+  createHttpTransport({ url: "https://mainnet-beta.my-server-2.com" }),
+  createHttpTransport({ url: "https://mainnet-beta.my-server-3.com" }),
+];
 
 // Create a wrapper transport that distributes requests to them
-let nextTransport = 0
-async function roundRobinTransport<TResponse>(
-  ...args: Parameters<RpcTransport>
-): Promise<RpcResponse<TResponse>> {
-  const transport = transports[nextTransport]
-  nextTransport = (nextTransport + 1) % transports.length
-  return await transport(...args)
+let nextTransport = 0;
+async function roundRobinTransport<TResponse>(...args: Parameters<RpcTransport>): Promise<RpcResponse<TResponse>> {
+  const transport = transports[nextTransport];
+  nextTransport = (nextTransport + 1) % transports.length;
+  return await transport(...args);
 }
 ```
 
@@ -291,29 +285,28 @@ async function roundRobinTransport<TResponse>(
 
 ### 3. error handling
 
-rpc独自のエラーとdomain logicに関するエラーは分けて管理するべき。
+rpc独自のエラーとapplicationに関するエラーは分けて管理するべきです。
 
-基本的なrpc周りのerrorは`@solana/errors`というlibがまとめてくれている。
+wallet接続 / 署名 / 送信 / rpc周りの頻出errorは`@solana/errors`でかなり分類されています。
 
 ---
 
 ### 3. error handling
 
-代表的なrpc error
+頻出するfrontend error
 
 <div class="text-sm">
 
-| Code     | Message                           | Explanation                                                                            |
-| -------- | --------------------------------- | -------------------------------------------------------------------------------------- |
-| `-32001` | Block Cleaned Up                  | システムアップグレードに関連する問題の可能性があります。運用元にお問い合わせください。 |
-| `-32002` | Transaction simulation failed     | 多くの場合、無効な命令やパラメータ、あるいはblockhashが原因です。                      |
-| `-32003` | Signature verification failure    | 署名が誤っている、もしくは不足している場合によく発生します。                           |
-| `-32004` | Block not available for slot      | 一時的なエラーです。リトライを推奨します。                                             |
-| `-32005` | Node is unhealthy                 | ノードの遅延が原因です。ノードを変更するか、リトライしてください。                     |
-| `-32007` | Slot skipped or missing           | リクエストしたブロックが存在しません。Solana Explorerなどで確認してください。          |
-| `-32009` | Slot missing in long-term storage | 履歴ブロックデータが利用できません。                                                   |
-| `-32010` | Excluded from account indexes     | 無効なペイロード、または未サポートのRPCメソッドです。                                  |
-| `-32013` | Signature length mismatch         | 署名の形式が正しくありません。                                                         |
+| Code                                                       | Message                       | Explanation                                                            |
+| ---------------------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| `WALLET__NOT_CONNECTED`                                    | No wallet connected           | 接続前に署名・送信を走らせたケース。connect完了前はUIを無効化します。  |
+| `TRANSACTION__SIGNATURES_MISSING`                          | Missing signatures            | 必要signerが揃っていない状態です。誰の署名が必要かをUIに出します。     |
+| `TRANSACTION__FEE_PAYER_SIGNATURE_MISSING`                 | Fee payer signature missing   | fee payer未設定、またはfee payerだけ未署名のケースです。               |
+| `TRANSACTION_ERROR__BLOCKHASH_NOT_FOUND`                   | Blockhash not found           | blockhash切れです。最新blockhashを取り直してtxを再構築します。         |
+| `JSON_RPC__SERVER_ERROR_SEND_TRANSACTION_PREFLIGHT_FAILURE`| Transaction simulation failed | 最頻出です。logsを見て命令ミス、account不足、残高不足を切り分けます。  |
+| `TRANSACTION_ERROR__INSUFFICIENT_FUNDS_FOR_FEE`            | Insufficient funds for fee    | fee payerのSOL不足です。送信前に残高チェックを入れておくと安全です。   |
+| `JSON_RPC__SERVER_ERROR_NODE_UNHEALTHY`                    | Node is unhealthy             | RPC側の遅延・不調です。別endpointへfailoverする想定を入れます。        |
+| `RPC__TRANSPORT_HTTP_ERROR`                                | HTTP transport error          | rate limitや一時障害です。retryと冗長RPC構成で吸収する前提にします。   |
 
 </div>
 
@@ -357,28 +350,13 @@ try {
 
 #### フロントエンド側のセキュリティ
 
-<div class="grid grid-cols-3 gap-5 items-stretch w-full mt-6 text-lg leading-relaxed">
+<div class="grid grid-cols-3 gap-4 w-full mt-4 text-sm leading-relaxed">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(12, 16, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+<div class="card border-t-green">
 
-<div style="height: 4px; background: linear-gradient(90deg, rgba(20,241,149,0.96), rgba(70,214,255,0.55));"></div>
-
-<div class="px-5 py-5">
-
-<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
-
-<span>Frontend Risk</span>
-<span style="font-size: 1.05em; color: rgba(20,241,149,0.96);">01</span>
-
-</div>
-
-<div class="text-2xl font-semibold mb-3">Wallet Phishing</div>
-
-<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+**Wallet Phishing**
 
 「Mint」のつもりでも、別の命令に署名させられることがある
-
-</div>
 
 - confirm 画面だけで安全と判断しない
 - UI で `Program ID` と instruction を明示する
@@ -386,28 +364,11 @@ try {
 
 </div>
 
-</div>
+<div class="card border-t-cyan">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(14, 19, 31, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
-
-<div style="height: 4px; background: linear-gradient(90deg, rgba(70,214,255,0.92), rgba(153,69,255,0.5));"></div>
-
-<div class="px-5 py-5">
-
-<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
-
-<span>Preflight Check</span>
-<span style="font-size: 1.05em; color: rgba(70,214,255,0.92);">02</span>
-
-</div>
-
-<div class="text-2xl font-semibold mb-3">Transaction Simulation</div>
-
-<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+**Transaction Simulation**
 
 送信前に失敗や想定外の state change を見つけるための最終チェック
-
-</div>
 
 - `simulateTransaction` で事前確認する
 - blockhash 切れや account 不足を先に潰せる
@@ -415,28 +376,11 @@ try {
 
 </div>
 
-</div>
+<div class="card border-t-purple">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(16, 22, 36, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
-
-<div style="height: 4px; background: linear-gradient(90deg, rgba(153,69,255,0.92), rgba(196,163,255,0.56));"></div>
-
-<div class="px-5 py-5">
-
-<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
-
-<span>Program Trust</span>
-<span style="font-size: 1.05em; color: rgba(196,163,255,0.96);">03</span>
-
-</div>
-
-<div class="text-2xl font-semibold mb-3">Malicious Program</div>
-
-<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+**Malicious Program**
 
 想定外の `Program ID` を踏むと、正しい UI でも不正な binary を実行し得る
-
-</div>
 
 - 参照先 `Program ID` を固定して確認する
 - unofficial fork や差し替え済み program を疑う
@@ -446,9 +390,7 @@ try {
 
 </div>
 
-</div>
-
-<div class="mt-5 px-5 py-4 rounded-2xl text-base leading-relaxed" style="background: rgba(10, 14, 24, 0.74); border: 1px solid rgba(255,255,255,0.1); color: rgba(170,180,214,0.92);">
+<div class="card-footer mt-3">
 
 フロントエンド側では「何を送るか」と「どこに送るか」をユーザーにも見える形で固定することが重要
 
@@ -460,84 +402,35 @@ try {
 
 #### プログラム側のセキュリティ
 
-<div class="grid grid-cols-3 gap-5 items-stretch w-full mt-6 text-lg leading-relaxed">
+<div class="grid grid-cols-3 gap-4 w-full mt-4 text-sm leading-relaxed">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(12, 16, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+<div class="card border-t-green">
 
-<div style="height: 4px; background: linear-gradient(90deg, rgba(20,241,149,0.96), rgba(70,214,255,0.55));"></div>
-
-<div class="px-5 py-5">
-
-<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
-
-<span>Authority</span>
-<span style="font-size: 1.05em; color: rgba(20,241,149,0.96);">01</span>
-
-</div>
-
-<div class="text-2xl font-semibold mb-3">Signer Check</div>
-
-<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+**Signer Check**
 
 重要操作の呼び出し元が本当に権限者かを見る
-
-</div>
 
 - CPI でも signer 権限は勝手に増やせない
 - `ctx.accounts.authority.is_signer`
 
 </div>
 
-</div>
+<div class="card border-t-cyan">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(14, 19, 31, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
-
-<div style="height: 4px; background: linear-gradient(90deg, rgba(70,214,255,0.92), rgba(153,69,255,0.5));"></div>
-
-<div class="px-5 py-5">
-
-<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
-
-<span>Ownership</span>
-<span style="font-size: 1.05em; color: rgba(70,214,255,0.92);">02</span>
-
-</div>
-
-<div class="text-2xl font-semibold mb-3">Account Ownership</div>
-
-<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+**Account Ownership**
 
 渡された account が自分の program 管理下かを見る
-
-</div>
 
 - `owner` が違えば data は安全に更新できない
 - `account.owner == program_id`
 
 </div>
 
-</div>
+<div class="card border-t-purple">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(16, 22, 36, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
-
-<div style="height: 4px; background: linear-gradient(90deg, rgba(153,69,255,0.92), rgba(196,163,255,0.56));"></div>
-
-<div class="px-5 py-5">
-
-<div class="flex items-center justify-between mb-4 text-xs" style="letter-spacing: 0.14em; text-transform: uppercase; color: rgba(170,180,214,0.9);">
-
-<span>Derivation</span>
-<span style="font-size: 1.05em; color: rgba(196,163,255,0.96);">03</span>
-
-</div>
-
-<div class="text-2xl font-semibold mb-3">PDA Validation</div>
-
-<div class="mb-4 text-base leading-relaxed" style="color: rgba(170,180,214,0.92);">
+**PDA Validation**
 
 正しい seeds から導出した address かを見る
-
-</div>
 
 - `signer` `owner` `PDA再導出` をセットで確認する
 - `require_keys_eq!(authority, expected_authority)`
@@ -546,9 +439,7 @@ try {
 
 </div>
 
-</div>
-
-<div class="mt-5 px-5 py-4 rounded-2xl text-base leading-relaxed" style="background: rgba(10, 14, 24, 0.74); border: 1px solid rgba(255,255,255,0.1); color: rgba(170,180,214,0.92);">
+<div class="card-footer mt-3">
 
 単独の check では不十分で、権限者・所有者・導出元の 3 方向から同時に締める必要がある
 
@@ -562,64 +453,43 @@ try {
 
 「何を守っているのか」を意識した 3 点セット
 
-<div class="grid grid-cols-3 gap-5 items-stretch w-full mt-6 text-center text-lg leading-relaxed">
+<div class="grid grid-cols-3 gap-4 w-full mt-4 text-center text-lg leading-relaxed">
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(12, 16, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+<div class="card border-t-green">
 
-<div style="height: 4px; background: linear-gradient(90deg, rgba(20,241,149,0.96), rgba(70,214,255,0.55));"></div>
+<span class="text-green text-4xl font-bold">1</span>
 
-<div class="px-5 py-6">
+**署名確認**
 
-<div class="text-5xl font-bold mb-3" style="color: rgba(20,241,149,0.96);">1</div>
+本当に権限のある人物か？
 
-<div class="text-2xl font-semibold mb-3">署名確認</div>
+</div>
 
-<div style="color: rgba(170,180,214,0.92);">本当に権限のある人物か？</div>
+<div class="card border-t-cyan">
+
+<span class="text-cyan text-4xl font-bold">2</span>
+
+**Owner確認**
+
+この account は自分の program か？
+
+</div>
+
+<div class="card border-t-purple">
+
+<span class="text-purple-soft text-4xl font-bold">3</span>
+
+**PDA再導出確認**
+
+seeds から導出した address と一致するか？
 
 </div>
 
 </div>
 
-<div class="rounded-2xl overflow-hidden" style="background: rgba(14, 19, 31, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
+<div class="card-footer mt-4">
 
-<div style="height: 4px; background: linear-gradient(90deg, rgba(70,214,255,0.92), rgba(153,69,255,0.5));"></div>
-
-<div class="px-5 py-6">
-
-<div class="text-5xl font-bold mb-3" style="color: rgba(70,214,255,0.92);">2</div>
-
-<div class="text-2xl font-semibold mb-3">Owner確認</div>
-
-<div style="color: rgba(170,180,214,0.92);">この account は自分の program か？</div>
-
-</div>
-
-</div>
-
-<div class="rounded-2xl overflow-hidden" style="background: rgba(16, 22, 36, 0.92); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04);">
-
-<div style="height: 4px; background: linear-gradient(90deg, rgba(153,69,255,0.92), rgba(196,163,255,0.56));"></div>
-
-<div class="px-5 py-6">
-
-<div class="text-5xl font-bold mb-3" style="color: rgba(196,163,255,0.96);">3</div>
-
-<div class="text-2xl font-semibold mb-3">PDA再導出確認</div>
-
-<div style="color: rgba(170,180,214,0.92);">seeds から導出した address と一致するか？</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="mt-6 rounded-2xl px-6 py-4 text-lg leading-relaxed" style="background: rgba(10, 14, 24, 0.82); border: 1px solid rgba(255,255,255,0.12);">
-
-**この 3 つを怠ると**
-
-- 攻撃者が意図しない account を差し込める
-- 権限のない操作を実行できる余地が生まれる
+**この 3 つを怠ると**、攻撃者が意図しない account を差し込め、権限のない操作を実行できる余地が生まれる
 
 </div>
 
@@ -649,7 +519,9 @@ try {
 
 Solanaは複数署名者・複数権限者を前提にした transaction model.
 
-`setTransactionMessageFeePayer(PLACEHOLDER_FEE_PAYER, tx)`などで`payer`を指定する事でsenderとpayerを分離してgas sponcerをnativeに実現可能
+<!-- ちなみにprotocol側ではtxのsignaturesの先頭にあるsignerがfee payerとみなされる仕様になってます -->
+
+`setTransactionMessageFeePayer(FEE_PAYER_ADDRESS, tx)`などで`payer`を指定する事でsenderとpayerを分離してgas sponcerをnativeに実現可能
 
 ---
 
@@ -658,15 +530,11 @@ Solanaは複数署名者・複数権限者を前提にした transaction model.
 <div class="text-xl">
 
 ```ts
-const { value: bh } = await rpc.getLatestBlockhash().send()
+const { value: bh } = await rpc.getLatestBlockhash().send();
 
 const msg = pipe(
   createTransactionMessage({ version: 0 }),
-  (tx) =>
-    setTransactionMessageFeePayer(
-      address('Amh6quo1FcmL16Qmzdugzjq3Lv1zXzTW7ktswyLDzits'), // placeholder
-      tx,
-    ),
+  (tx) => setTransactionMessageFeePayer(address("FEE_PAYER_ADDRESS"), tx),
   (tx) => setTransactionMessageLifetimeUsingBlockhash(bh, tx),
   (tx) =>
     appendTransactionMessageInstructions(
@@ -679,44 +547,47 @@ const msg = pipe(
       ],
       tx,
     ),
-)
+);
 ```
 
 </div>
 
 ---
 
+<!--
+ここでalchemyが行っているのは、実際にはこちらが投げたtxのmessageに対し、
+あらかじめ管理画面アドでdepositしてあるfee payer用のkeyでsignし先頭にsignatureを追加して返却してくれている。
+ -->
+
 <div class="text-lg">
 
 ```ts
 const sponsored = await fetch(rpcUrl, {
-  method: 'POST',
-  headers: { 'content-type': 'application/json' },
+  method: "POST",
+  headers: { "content-type": "application/json" },
   body: JSON.stringify({
-    jsonrpc: '2.0',
+    jsonrpc: "2.0",
     id: 1,
-    method: 'alchemy_requestFeePayer',
+    method: "alchemy_requestFeePayer",
     params: [
       {
         policyId: process.env.ALCHEMY_POLICY_ID!,
-        serializedTransaction: getBase64EncodedWireTransaction(
-          compileTransaction(msg),
-        ),
+        serializedTransaction: getBase64EncodedWireTransaction(compileTransaction(msg)),
       },
     ],
   }),
 })
   .then((r) => r.json())
-  .then((r) => r.result.serializedTransaction)
+  .then((r) => r.result.serializedTransaction);
 
-const tx = getTransactionDecoder().decode(getBase64Decoder().decode(sponsored))
-const signed = await partiallySignTransaction([user], tx)
+const tx = getTransactionDecoder().decode(getBase64Decoder().decode(sponsored));
+const signed = await partiallySignTransaction([user], tx);
 
 await rpc
   .sendTransaction(getBase64EncodedWireTransaction(signed), {
-    encoding: 'base64',
+    encoding: "base64",
   })
-  .send()
+  .send();
 ```
 
 </div>
@@ -742,6 +613,10 @@ await rpc
 - filter, searchなどonchain dataに対してqueryしたり集計が必要な場合
 - 複数プロトコルや複数コントラクトのデータをaggregateしたい時
 - DEXのchartなどの時系列データの整形・表示
+
+<!--
+pump.funやgmgnなどのtoken launchpadやtrade terminalなどはindexerを使用しているわかりやすいサービス例
+ -->
 
 ---
 

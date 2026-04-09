@@ -1,6 +1,15 @@
 // Please put `.vscode/settings.json` on your workspace
 {
-  "markdown.marp.themes": [
-    "./theme/solana.css"
-  ]
+  "markdown.marp.themes": ["./theme/solana.css"],
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
+    },
+    "editor.suggestOnTriggerCharacters": true
+  },
+  "editor.inlineSuggest.enabled": true
 }

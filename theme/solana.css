@@ -243,3 +243,43 @@ pre .hljs-attr,
 pre .hljs-title.class_.inherited__ {
   color: #d2a8ff !important;
 }
+
+/* Card utilities */
+.card {
+  background: var(--solana-surface);
+  border: 1px solid var(--solana-border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.card-footer {
+  background: rgba(10, 14, 24, 0.82);
+  border: 1px solid var(--solana-border);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  color: var(--solana-text-muted);
+}
+
+.text-green {
+  color: var(--solana-green);
+}
+
+.text-cyan {
+  color: var(--solana-cyan);
+}
+
+.text-purple-soft {
+  color: var(--solana-purple-soft);
+}
+
+.border-t-green {
+  border-top: 3px solid var(--solana-green);
+}
+
+.border-t-cyan {
+  border-top: 3px solid var(--solana-cyan);
+}
+
+.border-t-purple {
+  border-top: 3px solid var(--solana-purple);
+}
